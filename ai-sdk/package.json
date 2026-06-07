@@ -1,5 +1,5 @@
 {
-  "name": "@latchgate/ai-sdk",
+  "name": "latchgate-ai-sdk",
   "version": "0.1.0",
   "description": "Vercel AI SDK integration for LatchGate — execution security kernel for AI agents",
   "type": "module",
