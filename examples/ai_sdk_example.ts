@@ -5,7 +5,7 @@
  *   cd ai-sdk && npx tsx ../examples/ai_sdk_example.ts
  */
 
-import { latchgateToolset } from "@latchgate/ai-sdk";
+import { latchgateToolset } from "latchgate-ai-sdk";
 
 async function main(): Promise<void> {
   // No gateUrl needed — defaults to UDS (latchgate up)

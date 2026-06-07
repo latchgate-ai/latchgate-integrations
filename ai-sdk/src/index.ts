@@ -1,9 +1,9 @@
 /**
- * @latchgate/ai-sdk — Vercel AI SDK integration for LatchGate.
+ * latchgate-ai-sdk — Vercel AI SDK integration for LatchGate.
  *
  * @example
  * ```ts
- * import { latchgateToolset } from "@latchgate/ai-sdk";
+ * import { latchgateToolset } from "latchgate-ai-sdk";
  * import { generateText } from "ai";
  *
  * const { tools, close } = await latchgateToolset({ gateUrl: "http://localhost:3000" });

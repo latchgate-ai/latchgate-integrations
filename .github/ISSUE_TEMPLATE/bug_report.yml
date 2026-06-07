@@ -12,7 +12,7 @@ body:
         - latchgate-crewai
         - latchgate-openai-agents
         - latchgate-pydantic-ai
-        - "@latchgate/ai-sdk"
+        - "latchgate-ai-sdk"
     validations:
       required: true
   - type: input

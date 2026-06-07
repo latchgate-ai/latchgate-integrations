@@ -525,7 +525,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "langchain-core", specifier = ">=0.3.85,<1" },
+    { name = "langchain-core", specifier = ">=0.3.85,<2" },
     { name = "latchgate", specifier = ">=0.1.0" },
     { name = "latchgate-integrations-common", directory = "../common" },
     { name = "pydantic", specifier = ">=2.0.0,<3" },

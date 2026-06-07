@@ -9,7 +9,7 @@ body:
       options:
         - latchgate-langchain
         - latchgate-crewai
-        - "@latchgate/ai-sdk"
+        - "latchgate-ai-sdk"
         - latchgate-openai-agents
         - latchgate-pydantic-ai
         - New integration

@@ -21,7 +21,7 @@ Every package wraps LatchGate for a specific agent framework. Tool calls go thro
 | [`latchgate-crewai`](crewai/) | `pip install latchgate-crewai` | [CrewAI](https://www.crewai.com/) |
 | [`latchgate-openai-agents`](openai-agents/) | `pip install latchgate-openai-agents` | [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) |
 | [`latchgate-pydantic-ai`](pydantic/) | `pip install latchgate-pydantic-ai` | [Pydantic AI](https://ai.pydantic.dev/) |
-| [`@latchgate/ai-sdk`](ai-sdk/) | `npm install @latchgate/ai-sdk` | [Vercel AI SDK](https://ai-sdk.dev/) |
+| [`latchgate-ai-sdk`](ai-sdk/) | `npm install latchgate-ai-sdk` | [Vercel AI SDK](https://ai-sdk.dev/) |
 | [`latchgate-integrations-common`](common/) | *(internal — not a public API)* | — |
 
 ## Quick start
@@ -63,7 +63,7 @@ async with await LatchGateToolset.create() as toolset:
 
 ```typescript
 // Vercel AI SDK
-import { latchgateToolset } from "@latchgate/ai-sdk";
+import { latchgateToolset } from "latchgate-ai-sdk";
 import { generateText } from "ai";
 
 const { tools, close } = await latchgateToolset();

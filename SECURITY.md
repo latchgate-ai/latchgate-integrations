@@ -66,7 +66,7 @@ This policy covers all integration packages in this repository:
 - **latchgate-crewai** — CrewAI BaseTool integration
 - **latchgate-openai-agents** — OpenAI Agents SDK FunctionTool integration
 - **latchgate-pydantic-ai** — Pydantic AI AbstractToolset integration
-- **@latchgate/ai-sdk** — Vercel AI SDK ToolSet integration
+- **latchgate-ai-sdk** — Vercel AI SDK ToolSet integration
 - **CI/CD pipeline** — GitHub Actions workflows, release pipeline
 
 Security-relevant areas include output-only serialization (what the model sees), description redaction (enforcement topology exposure), identifier validation (path traversal), and the sync-to-async bridge.

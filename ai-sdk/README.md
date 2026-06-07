@@ -1,4 +1,4 @@
-# @latchgate/ai-sdk
+# latchgate-ai-sdk
 
 Vercel AI SDK integration for [LatchGate](https://github.com/latchgate-ai/latchgate) — execution security kernel for AI agents.
 
@@ -7,7 +7,7 @@ Every tool call goes through LatchGate's enforcement pipeline: **auth => policy 
 ## Installation
 
 ```bash
-npm install @latchgate/ai-sdk latchgate ai
+npm install latchgate-ai-sdk latchgate ai
 ```
 
 Requires a running LatchGate instance:
@@ -20,7 +20,7 @@ curl -fsSL https://raw.githubusercontent.com/latchgate-ai/latchgate/main/install
 
 ```typescript
 import { generateText } from "ai";
-import { latchgateToolset } from "@latchgate/ai-sdk";
+import { latchgateToolset } from "latchgate-ai-sdk";
 
 const { tools, close } = await latchgateToolset({ gateUrl: "http://localhost:3000" });
 
@@ -66,7 +66,7 @@ await close();
 Low-level discovery function:
 
 ```typescript
-import { discoverActions } from "@latchgate/ai-sdk";
+import { discoverActions } from "latchgate-ai-sdk";
 
 const descriptors = await discoverActions("http://localhost:3000", {
   include: new Set(["http_fetch"]),
