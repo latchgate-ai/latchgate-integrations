@@ -1,0 +1,42 @@
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+*.lock
+!uv.lock
+
+# ── TypeScript / Node ─────────────────────────────────────────────────────
+node_modules/
+dist/
+*.tsbuildinfo
+.eslintcache
+
+# ── IDE ───────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Docker ────────────────────────────────────────────────────────────────
+*.tar
+*.tar.gz
+
+# ── OS ────────────────────────────────────────────────────────────────────
+.DS_Store
+.Trash-*

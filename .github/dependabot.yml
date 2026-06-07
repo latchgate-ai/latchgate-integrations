@@ -1,0 +1,96 @@
+version: 2
+updates:
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "ci"
+
+  # Python — common
+  - package-ecosystem: pip
+    directory: /common
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(py)"
+    groups:
+      python-minor-patch:
+        update-types: [minor, patch]
+
+  # Node (ai-sdk)
+  - package-ecosystem: npm
+    directory: /ai-sdk
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(npm)"
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+
+  # Python — langchain
+  - package-ecosystem: pip
+    directory: /langchain
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(py)"
+    groups:
+      python-minor-patch:
+        update-types: [minor, patch]
+
+  # Python — crewai
+  - package-ecosystem: pip
+    directory: /crewai
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(py)"
+    groups:
+      python-minor-patch:
+        update-types: [minor, patch]
+
+  # Python — openai-agents
+  - package-ecosystem: pip
+    directory: /openai-agents
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(py)"
+    groups:
+      python-minor-patch:
+        update-types: [minor, patch]
+
+  # Python — pydantic
+  - package-ecosystem: pip
+    directory: /pydantic
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(py)"
+    groups:
+      python-minor-patch:
+        update-types: [minor, patch]

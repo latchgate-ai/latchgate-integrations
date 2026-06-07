@@ -1,0 +1,144 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Gate: run full CI before any publish ──────────────────────────────
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  # ── Shared package => PyPI first (framework packages depend on it) ────
+  publish-common:
+    name: Publish latchgate-integrations-common to PyPI
+    needs: [ci]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/project/latchgate-integrations-common/
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Build wheel and sdist
+        working-directory: common
+        run: uv build
+
+      - name: Smoke-test install from built artifact
+        working-directory: common
+        run: |
+          python -m venv /tmp/smoke-common
+          /tmp/smoke-common/bin/pip install dist/*.whl
+          /tmp/smoke-common/bin/python -c "import latchgate_common; print('OK')"
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
+        with:
+          packages-dir: common/dist/
+
+  # ── Framework packages => PyPI (after common is available) ─────────────
+  publish-python:
+    name: Publish ${{ matrix.package }} to PyPI
+    needs: [ci, publish-common]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - package: langchain
+            pypi_name: latchgate-langchain
+          - package: crewai
+            pypi_name: latchgate-crewai
+          - package: openai-agents
+            pypi_name: latchgate-openai-agents
+          - package: pydantic
+            pypi_name: latchgate-pydantic-ai
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/project/${{ matrix.pypi_name }}/
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Build wheel and sdist
+        working-directory: ${{ matrix.package }}
+        run: uv build
+
+      - name: Smoke-test install from built artifact
+        working-directory: ${{ matrix.package }}
+        run: |
+          python -m venv /tmp/smoke-${{ matrix.package }}
+          /tmp/smoke-${{ matrix.package }}/bin/pip install dist/*.whl
+          /tmp/smoke-${{ matrix.package }}/bin/python -c \
+            "import importlib; importlib.import_module('${IMPORT_NAME}')" \
+            || exit 1
+        env:
+          IMPORT_NAME: ${{ matrix.package == 'langchain' && 'latchgate_langchain' ||
+            matrix.package == 'crewai' && 'latchgate_crewai' ||
+            matrix.package == 'openai-agents' && 'latchgate_openai_agents' ||
+            'latchgate_pydantic_ai' }}
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
+        with:
+          packages-dir: ${{ matrix.package }}/dist/
+
+  # ── TypeScript package => npm ─────────────────────────────────────────
+  publish-npm:
+    name: Publish @latchgate/ai-sdk to npm
+    needs: [ci]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@latchgate/ai-sdk
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install and build
+        working-directory: ai-sdk
+        run: |
+          npm ci
+          npm run build
+
+      - name: Smoke-test package
+        working-directory: ai-sdk
+        run: |
+          TARBALL=$(npm pack --pack-destination /tmp)
+          mkdir /tmp/smoke-ai-sdk && cd /tmp/smoke-ai-sdk
+          npm init -y
+          npm install "/tmp/${TARBALL}"
+          node -e "require('@latchgate/ai-sdk')" || exit 1
+
+      - name: Publish to npm
+        working-directory: ai-sdk
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

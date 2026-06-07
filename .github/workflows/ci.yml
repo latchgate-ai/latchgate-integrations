@@ -1,0 +1,188 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
+
+# Transitive dependency CVEs with no upstream fix.
+# chromadb 1.1.1: CVE-2026-45829 (via crewai, no fix released)
+# diskcache 5.6.3: CVE-2025-69872 (via crewai, excluded but still resolved transitively)
+env:
+  PIP_AUDIT_IGNORE: >-
+    --ignore-vuln CVE-2026-45829
+    --ignore-vuln CVE-2025-69872
+
+jobs:
+  python:
+    name: Python (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [common, langchain, crewai, openai-agents, pydantic]
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.package }}
+        run: |
+          uv sync --python 3.12 --all-extras
+          uv pip install pytest pytest-asyncio
+
+      - name: Run tests
+        working-directory: ${{ matrix.package }}
+        run: uv run --python 3.12 pytest -v
+
+  typescript:
+    name: TypeScript (ai-sdk)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+
+      - name: Install and build
+        working-directory: ai-sdk
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run tests
+        working-directory: ai-sdk
+        run: npm test
+
+  # ── Python supply-chain audit ────────────────────────────────────────
+  python-security:
+    name: Python dependency audit (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [common, langchain, crewai, openai-agents, pydantic]
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: astral-sh/setup-uv@e58605a9b6da7c637471fab8847a5e5a6b8df081 # v5
+
+      - name: pip-audit
+        working-directory: ${{ matrix.package }}
+        run: |
+          uv export --python 3.12 --no-hashes --frozen -o /tmp/_reqs.txt
+          # Strip editable installs, local path deps, and git deps that
+          # pip-audit cannot resolve.
+          sed -i '/^-e /d; /^latchgate[@ ]/d; /^latchgate-/d; /^\.\./d; /git+/d' /tmp/_reqs.txt
+          uvx pip-audit -r /tmp/_reqs.txt $PIP_AUDIT_IGNORE
+
+  # ── Node supply-chain audit (OWASP CVE-lite) ────────────────────────
+  node-security:
+    name: Node dependency audit (ai-sdk)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: OWASP/cve-lite-cli@e2f3a18b2e83af81437d3e263c96e519acb26f9b # v1
+        with:
+          verbose: "true"
+          fail-on: high
+
+  # ── Smoke install checks ─────────────────────────────────────────────
+  smoke-common:
+    name: Smoke install (common)
+    needs: [python]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Build wheel
+        working-directory: common
+        run: uv build
+
+      - name: Install from wheel in clean venv
+        working-directory: common
+        run: |
+          python -m venv /tmp/smoke-common
+          /tmp/smoke-common/bin/pip install dist/*.whl
+          /tmp/smoke-common/bin/python -c "import latchgate_common; print('OK')"
+
+  smoke-python:
+    name: Smoke install (${{ matrix.package }})
+    needs: [python, smoke-common]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: langchain
+            import_name: latchgate_langchain
+          - package: crewai
+            import_name: latchgate_crewai
+          - package: openai-agents
+            import_name: latchgate_openai_agents
+          - package: pydantic
+            import_name: latchgate_pydantic_ai
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Build common wheel
+        working-directory: common
+        run: uv build
+
+      - name: Build framework wheel
+        working-directory: ${{ matrix.package }}
+        run: uv build
+
+      - name: Install from wheels in clean venv
+        run: |
+          python -m venv /tmp/smoke
+          /tmp/smoke/bin/pip install common/dist/*.whl
+          /tmp/smoke/bin/pip install ${{ matrix.package }}/dist/*.whl
+          /tmp/smoke/bin/python -c "import ${{ matrix.import_name }}; print('OK')"
+
+  smoke-npm:
+    name: Smoke install (@latchgate/ai-sdk)
+    needs: [typescript]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+
+      - name: Build and pack
+        working-directory: ai-sdk
+        run: |
+          npm ci
+          npm run build
+          npm pack --pack-destination /tmp
+
+      - name: Install from tarball in clean directory
+        run: |
+          mkdir /tmp/smoke-ai-sdk && cd /tmp/smoke-ai-sdk
+          npm init -y
+          npm install /tmp/latchgate-ai-sdk-*.tgz
+          node -e "import('@latchgate/ai-sdk').then(() => console.log('OK'))"

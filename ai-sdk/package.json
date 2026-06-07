@@ -1,0 +1,55 @@
+{
+  "name": "@latchgate/ai-sdk",
+  "version": "0.1.0",
+  "description": "Vercel AI SDK integration for LatchGate — execution security kernel for AI agents",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "format": "npx prettier --write 'src/**/*.ts' 'tests/**/*.ts'"
+  },
+  "keywords": [
+    "latchgate",
+    "ai-sdk",
+    "vercel",
+    "ai-agents",
+    "security",
+    "execution-security",
+    "tool-calling"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/latchgate-ai/latchgate-integrations"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "latchgate": "^0.1.0"
+  },
+  "peerDependencies": {
+    "ai": ">=6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ai": "^6.0.138",
+    "typescript": "~5.7.0",
+    "vitest": "^4.0.18",
+    "zod": "^3.23.0"
+  }
+}

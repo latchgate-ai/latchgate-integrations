@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/latchgate-ai/latchgate-integrations/security/advisories/new
+    about: Report security vulnerabilities privately.
+  - name: LatchGate core issues
+    url: https://github.com/latchgate-ai/latchgate/issues
+    about: For issues with the LatchGate server, kernel, or SDKs.

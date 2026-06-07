@@ -1,0 +1,51 @@
+name: Bug Report
+description: Report a bug in an integration package
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - latchgate-integrations-common
+        - latchgate-langchain
+        - latchgate-crewai
+        - latchgate-openai-agents
+        - latchgate-pydantic-ai
+        - "@latchgate/ai-sdk"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: framework-version
+    attributes:
+      label: Framework version
+      placeholder: "e.g. langchain-core 0.3.85, crewai 1.14.0, ai 6.0.0"
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Python / Node version
+      placeholder: "Python 3.12.1 / Node 20.11.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened? What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Code or steps to reproduce the issue.
+      render: python
