@@ -135,7 +135,7 @@ jobs:
           mkdir /tmp/smoke-ai-sdk && cd /tmp/smoke-ai-sdk
           npm init -y
           npm install "/tmp/${TARBALL}"
-          node -e "require('latchgate-ai-sdk')" || exit 1
+          node -e "import('latchgate-ai-sdk').then(() => console.log('OK'))" || exit 1
 
       - name: Publish to npm
         working-directory: ai-sdk

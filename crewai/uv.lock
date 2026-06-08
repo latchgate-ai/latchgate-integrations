@@ -1544,7 +1544,7 @@ wheels = [
 
 [[package]]
 name = "latchgate-crewai"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "crewai" },
@@ -1577,7 +1577,7 @@ dev = [
 
 [[package]]
 name = "latchgate-integrations-common"
-version = "0.1.0"
+version = "0.1.1"
 source = { directory = "../common" }
 dependencies = [
     { name = "httpx" },

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "latchgate-integrations-common"
-version = "0.1.0"
+version = "0.1.1"
 description = "Shared discovery, schema, serialization, and transport logic for LatchGate framework integrations"
 readme = "README.md"
 license = "Apache-2.0"

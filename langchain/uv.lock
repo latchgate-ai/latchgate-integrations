@@ -483,7 +483,7 @@ wheels = [
 
 [[package]]
 name = "latchgate-integrations-common"
-version = "0.1.0"
+version = "0.1.1"
 source = { directory = "../common" }
 dependencies = [
     { name = "httpx" },
@@ -507,7 +507,7 @@ dev = [
 
 [[package]]
 name = "latchgate-langchain"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "langchain-core" },
