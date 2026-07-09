@@ -1,13 +1,13 @@
 # LatchGate Integrations
 
-Framework integrations for [LatchGate](https://github.com/latchgate-ai/latchgate) — execution security kernel for AI agents.
+Framework integrations for [LatchGate](https://github.com/latchgate-ai/latchgate), execution security kernel for AI agents.
 
 [![CI](https://github.com/latchgate-ai/latchgate-integrations/actions/workflows/ci.yml/badge.svg)](https://github.com/latchgate-ai/latchgate-integrations/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)
 ![Python](https://img.shields.io/badge/python-3.12-blue?style=flat-square)
 ![Node](https://img.shields.io/badge/node-20%2B-green?style=flat-square)
 
-[LatchGate docs](https://docs.latchgate.ai) · [Integration guides](https://docs.latchgate.ai/integrations/) · [Report a vulnerability](SECURITY.md)
+[LatchGate docs](https://latchgate-docs.pages.dev/) · [Integration guides](https://latchgate-docs.pages.dev/integrations/) · [Report a vulnerability](SECURITY.md)
 
 ---
 

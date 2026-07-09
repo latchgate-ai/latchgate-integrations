@@ -14,7 +14,7 @@ Only the latest release receives security updates. Pin to a specific version for
 **Do not open a public issue.**
 
 1. **Preferred:** use [GitHub Private Vulnerability Reporting](https://github.com/latchgate-ai/latchgate-integrations/security/advisories/new).
-2. **Fallback:** email security@latchgate.ai with subject `[LatchGate Integrations Security]`.
+2. **Fallback:** email m2papierz@gmail.com with subject `[LatchGate Integrations Security]`.
 
 Include: description of the vulnerability and its impact, affected package(s) and version(s), reproduction steps or proof of concept, and severity assessment if known.
 
