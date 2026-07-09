@@ -9,7 +9,7 @@ description = "Shared discovery, schema, serialization, and transport logic for 
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
-authors = [{ name = "latchgate-ai" }]
+authors = [{ name = "Mateusz Papierz", email = "m2papierz@gmail.com" }]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -40,7 +40,7 @@ dev = [
 
 [tool.uv]
 package = true
-exclude-newer = "2026-06-07"
+exclude-newer = "2026-07-09"
 exclude-newer-package = { latchgate = "2026-06-08" }
 
 [project.urls]
