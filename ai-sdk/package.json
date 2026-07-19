@@ -48,7 +48,7 @@
   "devDependencies": {
     "@types/node": "^26.1.0",
     "ai": "^6.0.138",
-    "typescript": "~6.0.3",
+    "typescript": "~7.0.2",
     "vitest": "^4.0.18",
     "zod": "^4.4.3"
   }
